@@ -1,0 +1,42 @@
+{
+  "name": "charto-map-frontend",
+  "version": "0.0.1",
+  "description": "Charto map frontend",
+  "main": "dist/app.js",
+  "scripts": {
+    "tsc": "tsc",
+    "cbuild": "cbuild",
+    "bundle": "cbuild -m systemjs-hot-reloader -o dist/bundle.js -C config-npm.js",
+    "bundle-reloader": "cbuild -s node_modules/systemjs-hot-reloader/hot-reloader.js -o reloader-bundle.js -C config-reloader.js",
+    "docts": "docts",
+    "typings": "typings",
+    "prepublish": "typings install && tsc && tsc -p server && npm run bundle-reloader && npm run bundle",
+    "start": "node server/server.js"
+  },
+  "author": "Juha Järvi",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/charto/charto-map-frontend.git"
+  },
+  "bugs": {
+    "url": "https://github.com/charto/charto-map-frontend/issues"
+  },
+  "homepage": "https://github.com/charto/charto-map-frontend#readme",
+  "dependencies": {
+    "mobx": "~2.1.1",
+    "mobx-react": "~3.0.3",
+    "react": "^15.0.1",
+    "react-dom": "^15.0.1",
+    "systemjs": "~0.19.25",
+    "systemjs-hot-reloader": "https://github.com/capaj/systemjs-hot-reloader/tarball/f8674d4"
+  },
+  "devDependencies": {
+    "cbuild": "~0.0.4",
+    "chokidar-socket-emitter": "~0.5.1",
+    "docts": "~0.0.4",
+    "http-server": "~0.9.0",
+    "typescript": "^1.8.9",
+    "typings": "~0.7.12"
+  }
+}
