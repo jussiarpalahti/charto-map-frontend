@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {observable, autorun} from 'mobx';
+import {observable, autorun, toJSON} from 'mobx';
 import {observer} from 'mobx-react';
 import DevTools from 'mobx-react-devtools';
 
@@ -89,6 +89,7 @@ class Gather extends React.Component<{gatherings: Gatherings}, {}> {
         return (
             <div>
                 <h1>API Data Gathering App</h1>
+                <h2>Waiting for APIs</h2>
                 <input value={choices} placeholder="choice is yours, make it count" onChange={this.change} size="100" />
                 <YourData choices={choices} />
                 {apis? <Apis apis={apis} choose={this.makeChoice} /> : null}
@@ -101,5 +102,8 @@ class Gather extends React.Component<{gatherings: Gatherings}, {}> {
 
 
 const gatherings =  new Gatherings();
+
+var logger = autorun(() => console.log("I'm changing...", JSON.stringify(toJSON(gatherings.chosen)), JSON.stringify(toJSON(gatherings.choices))));
+
 
 export const Gatherer = <div><Gather gatherings={gatherings} /></div>;
