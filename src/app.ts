@@ -5,4 +5,5 @@ import * as ReactDOM from 'react-dom';
 
 import {Gatherer} from './root';
 
-var r = ReactDOM.render(Gatherer, document.getElementById('app'));
+var r = ReactDOM.render(Gatherer,
+  document.getElementById('app'));
