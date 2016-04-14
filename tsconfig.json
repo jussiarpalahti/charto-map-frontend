@@ -5,7 +5,7 @@
 		"jsx": "react",
 		"module": "commonjs",
 		"moduleResolution": "node",
-		"noImplicitAny": true,
+		"noImplicitAny": false,
 		"outDir": "dist",
 		"removeComments": false,
 		"target": "es5"
@@ -13,6 +13,7 @@
 	"files": [
 		"typings/browser.d.ts",
 
-		"src/app.ts"
+		"src/app.ts",
+		"src/root.tsx"
 	]
 }
