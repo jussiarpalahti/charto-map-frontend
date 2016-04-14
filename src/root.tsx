@@ -1,5 +1,4 @@
 import * as React from 'react';
-import * as ReactDOM from 'react-dom';
 import {observable, autorun} from 'mobx';
 import {observer} from 'mobx-react';
 import DevTools from 'mobx-react-devtools';
@@ -36,7 +35,9 @@ class Gatherings {
     }
 
     constructor() {
-        this.apis = ["hah", "hih"];
+        this.apis = [
+            {id: 1, type: "type1", title: "hih"},
+            {id: 2, type: "type2", title: "hoh"}];
     }
 }
 
@@ -59,7 +60,7 @@ function get_api_view(api_type) {
 }
 
 
-const YourData = ({choices}) => <div>Stupefyingly precious data: {choices}</div>;
+const YourData = ({choices}) => <div>Embarrassingly precious data, such wonder: {choices}</div>;
 
 
 const Apis = ({apis, choose}) => <div>
@@ -88,7 +89,7 @@ class Gather extends React.Component<{gatherings: Gatherings}, {}> {
         return (
             <div>
                 <h1>API Data Gathering App</h1>
-                <input value={choices} placeholder="choice is yours" onChange={this.change} />
+                <input value={choices} placeholder="choice is yours, make it count" onChange={this.change} size="100" />
                 <YourData choices={choices} />
                 {apis? <Apis apis={apis} choose={this.makeChoice} /> : null}
                 {chosen.map((choice, i) => <div key={"items_" + i}><Items choice={choice} /></div>)}
@@ -98,7 +99,6 @@ class Gather extends React.Component<{gatherings: Gatherings}, {}> {
      }
 }
 
-console.log('que');
 
 const gatherings =  new Gatherings();
 
