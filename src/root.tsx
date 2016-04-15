@@ -1,7 +1,10 @@
 import * as React from 'react';
-import {observable} from 'mobx';
+import {observable, autorun, toJSON} from 'mobx';
 import {observer} from 'mobx-react';
 import DevTools from 'mobx-react-devtools';
+
+declare var require: any;
+var Lockr = require('lockr');
 
 const API_BASE = "http://localhost:8000";
 const API_LIST_URL = API_BASE + "/apis";
@@ -112,6 +115,9 @@ class Gather extends React.Component<{gatherings: Gatherings}, {}> {
 }
 
 
-export const gatherings =  new Gatherings(null);
+const gatherings =  new Gatherings(null);
+
+var logger = autorun(() => console.log("I'm changing...", JSON.stringify(toJSON(gatherings.chosen)), JSON.stringify(toJSON(gatherings.choices))));
+
 
 export const Gatherer = <div><Gather gatherings={gatherings} /></div>;
