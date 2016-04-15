@@ -24,6 +24,7 @@
   },
   "homepage": "https://github.com/charto/charto-map-frontend#readme",
   "dependencies": {
+    "lockr": "^0.8.4",
     "mobx": "^2.1.2",
     "mobx-react": "^3.0.3",
     "mobx-react-devtools": "^4.0.2",

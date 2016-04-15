@@ -1,10 +1,11 @@
 import * as React from 'react';
-import {observable, autorun, toJSON} from 'mobx';
+import {observable} from 'mobx';
 import {observer} from 'mobx-react';
 import DevTools from 'mobx-react-devtools';
 
 const API_BASE = "http://localhost:8000";
 const API_LIST_URL = API_BASE + "/apis";
+
 
 class ApiView {
 
@@ -34,10 +35,20 @@ class Gatherings {
         this.chosen.push(new ApiView(choice));
     }
 
-    constructor() {
-        this.apis = [
-            {id: 1, type: "type1", title: "hih"},
-            {id: 2, type: "type2", title: "hoh"}];
+    constructor(init) {
+        if (init) {
+
+            // Initializing gatherings according to init object
+
+            this.apis = init.apis;
+            this.choices = init.choices;
+            this.chosen = init.choices.map((choice) => new ApiView(choice));
+
+        } else {
+            this.apis = [
+                {id: 1, type: "type1", title: "hih"},
+                {id: 2, type: "type2", title: "hoh"}];
+        }
     }
 }
 
@@ -101,9 +112,6 @@ class Gather extends React.Component<{gatherings: Gatherings}, {}> {
 }
 
 
-const gatherings =  new Gatherings();
-
-var logger = autorun(() => console.log("I'm changing...", JSON.stringify(toJSON(gatherings.chosen)), JSON.stringify(toJSON(gatherings.choices))));
-
+export const gatherings =  new Gatherings(null);
 
 export const Gatherer = <div><Gather gatherings={gatherings} /></div>;
