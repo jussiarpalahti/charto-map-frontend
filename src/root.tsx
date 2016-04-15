@@ -6,6 +6,8 @@ import DevTools from 'mobx-react-devtools';
 declare var require: any;
 var Lockr = require('lockr');
 
+import {state_store} from './toolbar';
+
 const API_BASE = "http://localhost:8000";
 const API_LIST_URL = API_BASE + "/apis";
 
@@ -115,9 +117,29 @@ class Gather extends React.Component<{gatherings: Gatherings}, {}> {
 }
 
 
-const gatherings =  new Gatherings(null);
+let stored_state = Lockr.get('toolbar_state');
+let gatherings;
 
-var logger = autorun(() => console.log("I'm changing...", JSON.stringify(toJSON(gatherings.chosen)), JSON.stringify(toJSON(gatherings.choices))));
+if (stored_state) {
+    gatherings = new Gatherings(stored_state.gatherings);
+} else {
+    gatherings =  new Gatherings(null);
+}
+
+const dehydrate = () => {
+    console.log("I'm changing...");
+    const dry = {
+        chosen: JSON.stringify(toJSON(gatherings.chosen)),
+        choices: JSON.stringify(toJSON(gatherings.choices)),
+        apis: JSON.stringify(toJSON(gatherings.apis))
+    };
+    
+    // TODO: State stores need an API
+    state_store.states.push(dry);
+};
+
+
+var logger = autorun(() => dehydrate());
 
 
 export const Gatherer = <div><Gather gatherings={gatherings} /></div>;

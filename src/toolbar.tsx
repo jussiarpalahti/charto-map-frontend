@@ -1,12 +1,20 @@
 
 import * as React from 'react';
+import {observable, autorun, toJSON} from 'mobx';
+import {observer} from 'mobx-react';
+
 
 class StateStore {
 
-    states = [];
+    @observable states = null;
+
+    constructor () {
+        this.states = [];
+    }
 
 }
 
+@observer
 class Tool extends React.Component<{store: StateStore}, {}> {
 
     render () {
@@ -21,6 +29,6 @@ class Tool extends React.Component<{store: StateStore}, {}> {
 
 }
 
-const state_store = new StateStore();
+export const state_store = new StateStore();
 
 export const Tools = <div><Tool store={state_store}/></div>;
