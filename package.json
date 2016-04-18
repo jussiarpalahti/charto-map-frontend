@@ -7,11 +7,11 @@
     "tsc": "tsc",
     "cbuild": "cbuild",
     "bundle": "cbuild -m systemjs-hot-reloader -o dist/bundle.js -C config-npm.js",
-    "bundle-reloader": "cbuild -s node_modules/systemjs-hot-reloader/hot-reloader.js -o reloader-bundle.js -C config-reloader.js",
+    "bundle-reloader": "cbuild -s node_modules/systemjs-hot-reloader/hot-reloader.js -o reloader-bundle.js -C config-reloader.js -d -v",
     "docts": "docts",
     "typings": "typings",
     "prepublish": "typings install && tsc && tsc -p server && npm run bundle-reloader && npm run bundle",
-    "start": "node server/server.js"
+    "start": "NODE_ENV=development node server/server.js"
   },
   "author": "Juha Järvi",
   "license": "MIT",
@@ -34,7 +34,7 @@
     "systemjs-hot-reloader": "https://github.com/capaj/systemjs-hot-reloader/tarball/f8674d4"
   },
   "devDependencies": {
-    "cbuild": "~0.0.4",
+    "cbuild": "0.0.6",
     "chokidar-socket-emitter": "~0.5.1",
     "docts": "~0.0.4",
     "http-server": "~0.9.0",
@@ -43,8 +43,8 @@
   },
   "jspm": {
     "dependencies": {
-      "mobx": "npm:mobx@^2.1.2",
-      "mobx-react": "npm:mobx-react@^3.0.3",
+      "mobx": "npm:mobx@^2.1.3",
+      "mobx-react": "npm:mobx-react@^3.0.4",
       "mobx-react-devtools": "npm:mobx-react-devtools@^4.0.2",
       "react": "npm:react@^15.0.1",
       "react-dom": "npm:react-dom@^15.0.1"
