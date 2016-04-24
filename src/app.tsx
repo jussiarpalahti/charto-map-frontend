@@ -28,8 +28,7 @@ const dehydrate = () => {
         choices: JSON.stringify(toJSON(gatherings.choices)),
         apis: JSON.stringify(toJSON(gatherings.apis))
     };
-
-    // TODO: State stores need an API
+    
     state_store.add_state(dry);
 };
 
@@ -50,6 +49,9 @@ if (stored_state) {
 // Listen to Mobx state changes
 var logger = autorun(() => dehydrate());
 
+state_store.register_model(gatherings,
+    (state) => new Gatherings(hydrate(state)),
+    (state) => console.log("not needed"));
 
 // The app
 ReactDOM.render(<div><Gather gatherings={gatherings} /></div>, document.getElementById('app'));
