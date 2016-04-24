@@ -58,3 +58,21 @@ ReactDOM.render(<div><Gather gatherings={gatherings} /></div>, document.getEleme
 
 // Time travelling toolbar
 ReactDOM.render(<div><ToolBar store={state_store}/></div>, document.getElementById('toolbar'));
+
+/*
+
+For future reference async/await is working with Chrome at least
+
+function delay(ms: number) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+async function printDelayed(elements: string[]) {
+    for (const element of elements) {
+        await delay(1000);
+        console.log(element);
+    }
+}
+
+printDelayed(["hih", "hoh", "heh"]);
+*/
