@@ -39,12 +39,12 @@ export class Gatherings {
 
     constructor(init) {
         if (init) {
-
+            console.log("hydrating state", init);
             // Initializing gatherings according to init object
 
             this.apis = init.apis;
             this.choices = init.choices;
-            this.chosen = init.choices.map((choice) => new ApiView(choice));
+            this.chosen = init.apis.map((choice) => new ApiView(choice));
 
         } else {
             this.apis = [

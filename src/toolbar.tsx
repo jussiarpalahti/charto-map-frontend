@@ -14,6 +14,7 @@ export class StateStore {
     @observable active_state = null;
     
     get_stored_state () {
+        console.log("getting state store", this.state_store);
         return Lockr.get(this.state_store)
     }
     
@@ -48,7 +49,7 @@ export class ToolBar extends React.Component<{store: StateStore}, {}> {
                 <button>Previous state</button>
                 <button>Next state</button>
                 <span> States: {store.states.length}</span>
-                <button onClick={store.persist_state}>Persist</button>
+                <button onClick={() => store.persist_state()}>Persist</button>
             </div>);
     }
 

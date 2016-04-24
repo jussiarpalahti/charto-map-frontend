@@ -16,6 +16,7 @@
 		"typings/browser.d.ts",
 
 		"src/app.tsx",
-		"src/root.tsx"
+		"src/root.tsx",
+		"src/toolbar.tsx"
 	]
 }

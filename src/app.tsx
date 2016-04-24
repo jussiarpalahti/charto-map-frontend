@@ -7,15 +7,19 @@ import {Gather, Gatherings} from './root';
 import {ToolBar, StateStore} from './toolbar';
 
 
-const state_store = new StateStore('toolbar_state');
-let stored_state = state_store.get_stored_state();
-let gatherings;
+//
+// Time travelling state tools
+//
 
-if (stored_state) {
-    gatherings = new Gatherings(stored_state.gatherings);
-} else {
-    gatherings =  new Gatherings(null);
-}
+const hydrate = (dry_state) => {
+    console.log("I'm returning...");
+    const alive = {
+        chosen: JSON.parse(dry_state.chosen),
+        choices: JSON.parse(dry_state.choices),
+        apis: JSON.parse(dry_state.apis)
+    };
+    return alive;
+};
 
 const dehydrate = () => {
     console.log("I'm changing...");
@@ -29,10 +33,26 @@ const dehydrate = () => {
     state_store.add_state(dry);
 };
 
+const state_store = new StateStore('toolbar_state');
+let stored_state = state_store.get_stored_state();
+let gatherings;
 
+//
+// Initialize app data
+//
+
+if (stored_state) {
+    gatherings = new Gatherings(hydrate(stored_state));
+} else {
+    gatherings =  new Gatherings(null);
+}
+
+// Listen to Mobx state changes
 var logger = autorun(() => dehydrate());
 
 
+// The app
 ReactDOM.render(<div><Gather gatherings={gatherings} /></div>, document.getElementById('app'));
 
+// Time travelling toolbar
 ReactDOM.render(<div><ToolBar store={state_store}/></div>, document.getElementById('toolbar'));
