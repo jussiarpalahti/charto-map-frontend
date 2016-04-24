@@ -6,8 +6,8 @@
   "scripts": {
     "tsc": "tsc",
     "cbuild": "cbuild",
-    "bundle": "cbuild -m systemjs-hot-reloader -o dist/bundle.js -C config-npm.js",
-    "bundle-reloader": "cbuild -s node_modules/systemjs-hot-reloader/hot-reloader.js -o reloader-bundle.js -C config-reloader.js -d -v",
+    "bundle": "cbuild -d -v -m systemjs-hot-reloader -o dist/bundle.js -C config-npm.js",
+    "bundle-reloader": "cbuild -d -v -s node_modules/systemjs-hot-reloader/hot-reloader.js -o reloader-bundle.js -C config-reloader.js",
     "docts": "docts",
     "typings": "typings",
     "prepublish": "typings install && tsc && tsc -p server && npm run bundle-reloader && npm run bundle",
@@ -34,7 +34,7 @@
     "systemjs-hot-reloader": "https://github.com/capaj/systemjs-hot-reloader/tarball/f8674d4"
   },
   "devDependencies": {
-    "cbuild": "0.0.6",
+    "cbuild": "~0.0.6",
     "chokidar-socket-emitter": "~0.5.1",
     "docts": "~0.0.4",
     "http-server": "~0.9.0",

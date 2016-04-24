@@ -1,4 +1,5 @@
 node_modules/
+*.map
 *.js
 *.d.ts
 *.log.*
