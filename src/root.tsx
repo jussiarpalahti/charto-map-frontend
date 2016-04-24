@@ -3,10 +3,7 @@ import {observable, autorun, toJSON} from 'mobx';
 import {observer} from 'mobx-react';
 import DevTools from 'mobx-react-devtools';
 
-declare var require: any;
-var Lockr = require('lockr');
-
-import {state_store} from './toolbar';
+import {StateStore, ToolBar} from './toolbar';
 
 const API_BASE = "http://localhost:8000";
 const API_LIST_URL = API_BASE + "/apis";
@@ -25,7 +22,7 @@ class ApiView {
 }
 
 
-class Gatherings {
+export class Gatherings {
 
     @observable choices = "";
     @observable apis = [];
@@ -90,18 +87,10 @@ const Items = ({choice}) => <div>{get_api_view(choice.api.type)(choice)}</div>;
 
 
 @observer
-class Gather extends React.Component<{gatherings: Gatherings}, {}> {
-
-    change(e) {
-        gatherings.makeChange(e.target.value);
-    }
-
-    makeChoice(choice) {
-        gatherings.choose(choice);
-    }
+export class Gather extends React.Component<{gatherings: Gatherings}, {}> {
 
     render() {
-        var {choices, apis, chosen} = gatherings;
+        var {choices, apis, chosen} = this.props.gatherings;
         return (
             <div>
                 <h1>API Data Gathering App</h1>
@@ -114,32 +103,13 @@ class Gather extends React.Component<{gatherings: Gatherings}, {}> {
             </div>
         );
      }
-}
 
-
-let stored_state = Lockr.get('toolbar_state');
-let gatherings;
-
-if (stored_state) {
-    gatherings = new Gatherings(stored_state.gatherings);
-} else {
-    gatherings =  new Gatherings(null);
-}
-
-const dehydrate = () => {
-    console.log("I'm changing...");
-    const dry = {
-        chosen: JSON.stringify(toJSON(gatherings.chosen)),
-        choices: JSON.stringify(toJSON(gatherings.choices)),
-        apis: JSON.stringify(toJSON(gatherings.apis))
+    change = (e) => {
+        this.props.gatherings.makeChange(e.target.value);
     };
-    
-    // TODO: State stores need an API
-    state_store.states.push(dry);
-};
 
+    makeChoice = (choice) => {
+        this.props.gatherings.choose(choice);
+    }
+}
 
-var logger = autorun(() => dehydrate());
-
-
-export const Gatherer = <div><Gather gatherings={gatherings} /></div>;

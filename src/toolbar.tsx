@@ -3,19 +3,43 @@ import * as React from 'react';
 import {observable, autorun, toJSON} from 'mobx';
 import {observer} from 'mobx-react';
 
+declare var require: any;
+var Lockr = require('lockr');
 
-class StateStore {
 
+export class StateStore {
+
+    state_store = null;
     @observable states = null;
+    @observable active_state = null;
+    
+    get_stored_state () {
+        return Lockr.get(this.state_store)
+    }
+    
+    add_state (state) {
+        this.states.push(state);
+    }
 
-    constructor () {
+    persist_state () {
+        if (this.active_state) {
+            Lockr.set(this.state_store, this.states[this.active_state]);
+        } else {
+            Lockr.set(this.state_store, this.states[this.states.length - 1]);
+        }
+    }
+    
+    constructor (store_key) {
+        
+        this.state_store = store_key;
         this.states = [];
+        this.active_state = null;
     }
 
 }
 
 @observer
-class Tool extends React.Component<{store: StateStore}, {}> {
+export class ToolBar extends React.Component<{store: StateStore}, {}> {
 
     render () {
         var {store} = this.props;
@@ -24,11 +48,8 @@ class Tool extends React.Component<{store: StateStore}, {}> {
                 <button>Previous state</button>
                 <button>Next state</button>
                 <span> States: {store.states.length}</span>
+                <button onClick={store.persist_state}>Persist</button>
             </div>);
     }
 
 }
-
-export const state_store = new StateStore();
-
-export const Tools = <div><Tool store={state_store}/></div>;

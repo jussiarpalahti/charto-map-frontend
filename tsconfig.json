@@ -15,7 +15,7 @@
 	"files": [
 		"typings/browser.d.ts",
 
-		"src/app.ts",
+		"src/app.tsx",
 		"src/root.tsx"
 	]
 }
