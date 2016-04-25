@@ -12,23 +12,31 @@ export class StateStore {
     currentFrame = -1;
     @observable states = null;
     @observable active_state = null;
-    @observable model = null;
-    hydrate = null;
-    dehydrate = null;
+    model = null;
+    instance = null;
+    sentinel = null;
 
-    register_model (model, hydrate, dehydrate) {
-        this.model = model;
-        this.hydrate = hydrate;
-        this.dehydrate = dehydrate;
-    }
+    get_state () {
 
-    get_stored_state () {
-        console.log("getting state store", this.state_store);
-        return Lockr.get(this.state_store)
+        if (!this.instance) {
+            let stored_state = Lockr.get(this.state_store);
+            if (stored_state) {
+                console.log("getting state store", this.state_store);
+                this.instance = new this.model();
+                this.instance.hydrate(stored_state);
+            } else {
+                this.instance = new this.model(null);
+            }
+        }
+
+        return this.instance;
     }
     
-    add_state (state) {
-        this.states.push(state);
+    add_state () {
+        if (!this.sentinel) {
+            this.states.push(this.instance.dehydrate());
+            this.sentinel = false;
+        }
     }
 
     persist_state () {
@@ -49,12 +57,9 @@ export class StateStore {
         if (this.currentFrame === -1)
             this.currentFrame = this.states.length;
         this.currentFrame--;
-
+        this.sentinel = true; // TODO: Check Mobx autorun suppression
         transaction(() => {
-            let new_state = this.hydrate(this.states[this.currentFrame]);
-            this.model.choices = new_state.choices;
-            this.model.chosen = new_state.chosen;
-            this.model.apis = new_state.apis;
+            this.instance.hydrate(this.states[this.currentFrame]);
         });
     }
 
@@ -66,20 +71,15 @@ export class StateStore {
         }
 
         this.currentFrame++;
-        
+        this.sentinel = true; // TODO: Check Mobx autorun suppression
         transaction(() => {
-            let new_state = this.hydrate(this.states[this.currentFrame]);
-            this.model.choices = new_state.choices;
-            this.model.chosen = new_state.chosen;
-            this.model.apis = new_state.apis;
+            this.instance.hydrate(this.states[this.currentFrame]);
         });
     }
 
-    constructor (store_key) {
-        
+    constructor (model, store_key) {
+        this.model = model;
         this.state_store = store_key;
-        this.states = [];
-        this.active_state = null;
     }
 
 }

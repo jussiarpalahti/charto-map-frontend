@@ -36,6 +36,23 @@ export class Gatherings {
         console.log("choicing", choice);
         this.chosen.push(new ApiView(choice));
     }
+    
+    hydrate(dry_state) {
+        console.log("I'm returning...");
+        this.chosen = JSON.parse(dry_state.chosen);
+        this.choices = JSON.parse(dry_state.choices);
+        this.apis = JSON.parse(dry_state.apis);
+    }
+
+    dehydrate () {
+        console.log("I'm drying...");
+        const dry = {
+            chosen: JSON.stringify(toJSON(this.chosen)),
+            choices: JSON.stringify(toJSON(this.choices)),
+            apis: JSON.stringify(toJSON(this.apis))
+        };
+        return dry;
+    }
 
     constructor(init) {
         if (init) {
