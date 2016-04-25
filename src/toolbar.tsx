@@ -10,7 +10,7 @@ export class StateStore {
 
     state_store = null;
     currentFrame = -1;
-    @observable states = null;
+    @observable states = [];
     @observable active_state = null;
     model = null;
     instance = null;
@@ -21,8 +21,7 @@ export class StateStore {
         if (!this.instance) {
             let stored_state = Lockr.get(this.state_store);
             if (stored_state) {
-                console.log("getting state store", this.state_store);
-                this.instance = new this.model();
+                this.instance = new this.model(null);
                 this.instance.hydrate(stored_state);
             } else {
                 this.instance = new this.model(null);
@@ -33,7 +32,7 @@ export class StateStore {
     }
     
     add_state () {
-        if (!this.sentinel) {
+        if (this.instance && !this.sentinel) {
             this.states.push(this.instance.dehydrate());
             this.sentinel = false;
         }

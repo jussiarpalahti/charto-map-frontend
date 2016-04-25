@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {observable, autorun, toJSON} from 'mobx';
+import {observable, toJSON} from 'mobx';
 import {observer} from 'mobx-react';
 import DevTools from 'mobx-react-devtools';
 
@@ -41,7 +41,7 @@ export class Gatherings {
         console.log("I'm returning...");
         this.chosen = JSON.parse(dry_state.chosen);
         this.choices = JSON.parse(dry_state.choices);
-        this.apis = JSON.parse(dry_state.apis);
+        this.apis = JSON.parse(dry_state.apis).map((choice) => new ApiView(choice));;
     }
 
     dehydrate () {
@@ -61,7 +61,7 @@ export class Gatherings {
 
             this.apis = init.apis;
             this.choices = init.choices;
-            this.chosen = init.apis.map((choice) => new ApiView(choice));
+            this.chosen = init.apis
 
         } else {
             this.apis = [
@@ -95,7 +95,7 @@ const YourData = ({choices}) => <div>Embarrassingly precious data, such wonder: 
 
 const Apis = ({apis, choose}) => <div>
     <ul>
-        {apis.map(item => <li key={item.id} onClick={() => choose(item)}>{item.title}</li>)}
+        {apis.map((item, i) => <li key={i} onClick={() => choose(item)}>{item.title}</li>)}
     </ul>
 </div>;
 
