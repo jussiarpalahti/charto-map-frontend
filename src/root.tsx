@@ -34,13 +34,13 @@ export class Gatherings {
 
     choose(choice) {
         console.log("choicing", choice);
-        this.chosen.push(new ApiView(choice));
+        this.chosen.push(choice);
     }
     
     hydrate(dry_state) {
         this.chosen = JSON.parse(dry_state.chosen);
         this.choices = JSON.parse(dry_state.choices);
-        this.apis = JSON.parse(dry_state.apis).map((choice) => new ApiView(choice));;
+        this.apis = JSON.parse(dry_state.apis).map((choice) => new ApiView(choice));
     }
 
     dehydrate () {
@@ -93,7 +93,7 @@ const YourData = ({choices}) => <div>Embarrassingly precious data, such wonder: 
 
 const Apis = ({apis, choose}) => <div>
     <ul>
-        {apis.map((item, i) => <li key={i} onClick={() => choose(item)}>{item.title}</li>)}
+        {apis.map((item, i) => <li key={i} onClick={() => choose(item)}>{item.api.title}</li>)}
     </ul>
 </div>;
 
