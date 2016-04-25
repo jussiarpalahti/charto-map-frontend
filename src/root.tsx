@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {observable, toJSON} from 'mobx';
+import {observable, toJSON, autorun} from 'mobx';
 import {observer} from 'mobx-react';
 import DevTools from 'mobx-react-devtools';
 
@@ -38,14 +38,12 @@ export class Gatherings {
     }
     
     hydrate(dry_state) {
-        console.log("I'm returning...");
         this.chosen = JSON.parse(dry_state.chosen);
         this.choices = JSON.parse(dry_state.choices);
         this.apis = JSON.parse(dry_state.apis).map((choice) => new ApiView(choice));;
     }
 
     dehydrate () {
-        console.log("I'm drying...");
         const dry = {
             chosen: JSON.stringify(toJSON(this.chosen)),
             choices: JSON.stringify(toJSON(this.choices)),

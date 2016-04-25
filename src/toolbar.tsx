@@ -1,6 +1,6 @@
 
 import * as React from 'react';
-import {observable, transaction} from 'mobx';
+import {observable, transaction, autorun} from 'mobx';
 import {observer} from 'mobx-react';
 
 declare var require: any;
@@ -13,27 +13,11 @@ export class StateStore {
     @observable states = [];
     @observable active_state = null;
     model = null;
-    instance = null;
     sentinel = null;
-
-    get_state () {
-
-        if (!this.instance) {
-            let stored_state = Lockr.get(this.state_store);
-            if (stored_state) {
-                this.instance = new this.model(null);
-                this.instance.hydrate(stored_state);
-            } else {
-                this.instance = new this.model(null);
-            }
-        }
-
-        return this.instance;
-    }
     
     add_state () {
-        if (this.instance && !this.sentinel) {
-            this.states.push(this.instance.dehydrate());
+        if (this.model && !this.sentinel) {
+            this.states.push(this.model.dehydrate());
             this.sentinel = false;
         }
     }
@@ -58,7 +42,7 @@ export class StateStore {
         this.currentFrame--;
         this.sentinel = true; // TODO: Check Mobx autorun suppression
         transaction(() => {
-            this.instance.hydrate(this.states[this.currentFrame]);
+            this.model.hydrate(this.states[this.currentFrame]);
         });
     }
 
@@ -72,16 +56,21 @@ export class StateStore {
         this.currentFrame++;
         this.sentinel = true; // TODO: Check Mobx autorun suppression
         transaction(() => {
-            this.instance.hydrate(this.states[this.currentFrame]);
+            this.model.hydrate(this.states[this.currentFrame]);
         });
     }
 
     constructor (model, store_key) {
         this.model = model;
         this.state_store = store_key;
+        let stored_state = Lockr.get(this.state_store);
+        if (stored_state) {
+            this.model.hydrate(stored_state);
+        }
     }
 
 }
+
 
 @observer
 export class ToolBar extends React.Component<{store: StateStore}, {}> {

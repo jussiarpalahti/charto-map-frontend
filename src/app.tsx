@@ -1,7 +1,7 @@
 
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import {autorun, toJSON} from 'mobx';
+import {autorun} from 'mobx';
 
 import {Gather, Gatherings} from './root';
 import {ToolBar, StateStore} from './toolbar';
@@ -11,17 +11,21 @@ import {ToolBar, StateStore} from './toolbar';
 // Time travelling state tools
 //
 
-const state_store = new StateStore(Gatherings, 'toolbar_state');
+let gatherings = new Gatherings(null);
+
+const state_store = new StateStore(gatherings, 'toolbar_state');
 
 // Listen to Mobx state changes
-var logger = autorun(() => state_store.add_state());
+var logger = autorun(() => {
+    state_store.add_state();
+});
 
 //
 // Initialize app data
 //
 
 // The app
-ReactDOM.render(<div><Gather gatherings={state_store.get_state()} /></div>, document.getElementById('app'));
+ReactDOM.render(<div><Gather gatherings={gatherings} /></div>, document.getElementById('app'));
 
 // Time travelling toolbar
 ReactDOM.render(<div><ToolBar store={state_store}/></div>, document.getElementById('toolbar'));
