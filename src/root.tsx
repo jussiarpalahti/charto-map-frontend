@@ -40,7 +40,7 @@ export class Gatherings {
     hydrate(dry_state) {
         this.chosen = JSON.parse(dry_state.chosen);
         this.choices = JSON.parse(dry_state.choices);
-        this.apis = JSON.parse(dry_state.apis).map((choice) => new ApiView(choice));
+        this.apis = JSON.parse(dry_state.apis); //.map((choice) => new ApiView(choice));
     }
 
     dehydrate () {
