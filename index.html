@@ -20,21 +20,6 @@
 			var ready;
 
 			if(debug) {
-				// Wrap imported code inside a try-catch block so source maps
-				// get applied to to stack traces for errors during import.
-
-				var oldInstantiate = System.instantiate;
-
-				System.instantiate = function(load) {
-					return(oldInstantiate.call(this, load).then(function(result) {
-						if(!load.metadata.bundle && load.metadata.format.match(/^(amd|cjs)$/)) {
-							load.source = 'try {' + load.source + '\n} catch(err) {console.error(err.stack);}';
-						}
-
-						return(result);
-					}));
-				}
-
 				// Trace imports for hot reloading support.
 				System.trace = true;
 
@@ -50,7 +35,9 @@
 			}
 
 			ready.then(function() {
-				System.import('dist/app');
+				System.import('dist/app').catch(function(err) {
+					throw(err.originalErr || err);
+				});
 			});
 		});
 	</script>
