@@ -11,12 +11,14 @@ const API_LIST_URL = API_BASE + "/apis";
 
 class ApiView {
 
-    api = null;
-    @observable items = [];
+    id = null;
+    title = null;
+    type = null;
 
-    constructor(api) {
-        this.api = api;
-        this.items = ["hih", "hoh"]
+    constructor(id, title, type) {
+        this.id = id;
+        this.title = title;
+        this.type = type;
     }
 
 }
@@ -33,14 +35,13 @@ export class Gatherings {
     }
 
     choose(choice) {
-        console.log("choicing", choice);
         this.chosen.push(choice);
     }
     
     hydrate(dry_state) {
         this.chosen = JSON.parse(dry_state.chosen);
         this.choices = JSON.parse(dry_state.choices);
-        this.apis = JSON.parse(dry_state.apis); //.map((choice) => new ApiView(choice));
+        this.apis = JSON.parse(dry_state.apis).map((choice) => new ApiView(choice.id, choice.title, choice.type));
     }
 
     dehydrate () {
@@ -70,10 +71,10 @@ export class Gatherings {
 }
 
 
-const Type1 = ({api}) => <div>Type1: {api.id}</div>;
+const Type1 = (api) => <div>Type1: {api.id}</div>;
 
 
-const Type2 = ({api}) => <div>Type2: {api.id}</div>;
+const Type2 = (api) => <div>Type2: {api.id}</div>;
 
 
 function get_api_view(api_type) {
@@ -88,17 +89,17 @@ function get_api_view(api_type) {
 }
 
 
-const YourData = ({choices}) => <div>Embarrassingly precious data, such wonder: {choices}</div>;
+const YourData = ({choices}) => <div>Embarrassingly precious data, such wonder: {choices ? choices : "none yet"}</div>;
 
 
 const Apis = ({apis, choose}) => <div>
     <ul>
-        {apis.map((item, i) => <li key={i} onClick={() => choose(item)}>{item.api.title}</li>)}
+        {apis.map((api, i) => <li key={i} onClick={() => choose(api)}>{api.title}</li>)}
     </ul>
 </div>;
 
 
-const Items = ({choice}) => <div>{get_api_view(choice.api.type)(choice)}</div>;
+const Items = ({api}) => <div>{get_api_view(api.type)(api)}</div>;
 
 
 @observer
@@ -113,7 +114,7 @@ export class Gather extends React.Component<{gatherings: Gatherings}, {}> {
                 <input value={choices} placeholder="choice is yours, make it count" onChange={this.change} size="100" />
                 <YourData choices={choices} />
                 {apis? <Apis apis={apis} choose={this.makeChoice} /> : null}
-                {chosen.map((choice, i) => <div key={"items_" + i}><Items choice={choice} /></div>)}
+                {chosen.map((choice, i) => <div key={"items_" + i}><Items api={choice} /></div>)}
                 <DevTools />
             </div>
         );

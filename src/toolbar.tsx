@@ -30,6 +30,10 @@ export class StateStore {
         }
     }
 
+    clear_state () {
+        Lockr.rm(this.state_store);
+    }
+    
     prev_state () {
 
         if (this.currentFrame === 0) {
@@ -83,6 +87,7 @@ export class ToolBar extends React.Component<{store: StateStore}, {}> {
                 <button onClick={() => store.next_state()}>Next state</button>
                 <span> States: {store.states.length}</span>
                 <button onClick={() => store.persist_state()}>Persist</button>
+                <button onClick={() => store.clear_state()}>Clear local storage</button>
             </div>);
     }
 
