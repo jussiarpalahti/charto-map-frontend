@@ -18,11 +18,14 @@ export class StateStore {
         if (this.model && !this.sentinel) {
             this.sentinel = true;
             transaction(() => {
+                this.states = this.states.slice(0, this.active_state);
                 this.states.push(state);
                 this.active_state += 1;
                 this.sentinel = false;
             });
+            this.sentinel = false;
         }
+        this.sentinel = false;
     }
 
     persist_state () {
@@ -44,9 +47,9 @@ export class StateStore {
             return;
         }
 
-        this.active_state--;
         this.sentinel = true; // TODO: Check Mobx autorun suppression
         transaction(() => {
+            this.active_state--;
             this.model.hydrate(this.states[this.active_state]);
         });
     }
@@ -58,9 +61,9 @@ export class StateStore {
             return;
         }
 
-        this.active_state++;
         this.sentinel = true; // TODO: Check Mobx autorun suppression
         transaction(() => {
+            this.active_state++;
             this.model.hydrate(this.states[this.active_state - 1]);
         });
     }
@@ -95,7 +98,7 @@ export class ToolBar extends React.Component<{store: StateStore}, {}> {
                 <button disabled={!store.is_prev_state() ? "disabled" : ""} onClick={() => store.prev_state()}>Previous state</button>
                 <button disabled={!store.is_next_state() ? "disabled" : ""} onClick={() => store.next_state()}>Next state</button>
                 <span> States: {store.active_state}/{store.states.length}</span>
-                <button onClick={() => store.persist_state()}>Persist</button>
+                <button onClick={() => store.persist_state()}>Persist to local storage</button>
                 <button onClick={() => store.clear_state()}>Clear local storage</button>
             </div>);
     }
