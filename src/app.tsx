@@ -17,7 +17,11 @@ const state_store = new StateStore(gatherings, 'toolbar_state');
 
 // Listen to Mobx state changes
 var logger = autorun(() => {
-    state_store.add_state();
+    let arg = state_store.model.dehydrate();
+    // TODO: Fix this hack because autorun is changing models as a side effect
+    requestAnimationFrame(() => {
+        state_store.add_state(arg);
+    });
 });
 
 //
