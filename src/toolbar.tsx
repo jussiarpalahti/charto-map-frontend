@@ -33,7 +33,7 @@ export class StateStore {
     clear_state () {
         Lockr.rm(this.state_store);
     }
-    
+
     prev_state () {
 
         if (this.currentFrame === 0) {
@@ -82,7 +82,7 @@ export class ToolBar extends React.Component<{store: StateStore}, {}> {
     render () {
         var {store} = this.props;
         return (
-            <div><h1>Toolbar</h1>
+            <div><h1>State Toolbar</h1>
                 <button onClick={() => store.prev_state()}>Previous state</button>
                 <button onClick={() => store.next_state()}>Next state</button>
                 <span> States: {store.states.length}</span>

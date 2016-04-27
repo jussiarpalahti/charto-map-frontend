@@ -4,3 +4,22 @@ html, body, #map {
 	padding: 0;
 	margin: 0;
 }
+
+#toolbar {
+	border: 2px solid black;
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	margin: 0;
+	padding: 0;
+}
+
+#toolbar * {
+	margin: 0.3em;
+}
+
+#toolbar h1 {
+	display: inline;
+	font-size: 120%;
+}
