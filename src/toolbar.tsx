@@ -1,6 +1,6 @@
 
 import * as React from 'react';
-import {observable, transaction} from 'mobx';
+import {observable, transaction, asFlat} from 'mobx';
 import {observer} from 'mobx-react';
 
 declare var require: any;
@@ -9,23 +9,23 @@ var Lockr = require('lockr');
 export class StateStore {
 
     state_store = null;
-    @observable states = [];
+    @observable states = asFlat([]);
     @observable active_state = 0;
     model = null;
     sentinel = null;
     
-    add_state (state) {
+    add_state (new_state) {
         if (this.model && !this.sentinel) {
-            this.sentinel = true;
-            transaction(() => {
-                this.states = this.states.slice(0, this.active_state);
-                this.states.push(state);
-                this.active_state += 1;
-                this.sentinel = false;
-            });
+            let state = new_state? new_state : this.model.dehydrate();
             this.sentinel = false;
+            this.states = this.states.slice(0, this.active_state);
+            this.states.push(state);
+            this.active_state = this.states.length;
         }
-        this.sentinel = false;
+    }
+    
+    activate_state () {
+        this.active_state += 1;
     }
 
     persist_state () {
@@ -47,10 +47,10 @@ export class StateStore {
             return;
         }
 
-        this.sentinel = true; // TODO: Check Mobx autorun suppression
+        this.sentinel = true;
         transaction(() => {
-            this.active_state--;
-            this.model.hydrate(this.states[this.active_state]);
+            this.active_state -= 1;
+            this.model.hydrate(this.states[this.active_state - 1]);
         });
     }
 
@@ -61,9 +61,9 @@ export class StateStore {
             return;
         }
 
-        this.sentinel = true; // TODO: Check Mobx autorun suppression
+        this.sentinel = true;
         transaction(() => {
-            this.active_state++;
+            this.active_state += 1;
             this.model.hydrate(this.states[this.active_state - 1]);
         });
     }
@@ -82,6 +82,7 @@ export class StateStore {
         let stored_state = Lockr.get(this.state_store);
         if (stored_state) {
             this.model.hydrate(stored_state);
+            this.add_state(stored_state); // Locally stored state to time machine
         }
     }
 
